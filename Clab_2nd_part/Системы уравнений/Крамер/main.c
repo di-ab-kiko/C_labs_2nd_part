@@ -35,17 +35,17 @@ result Kramer(int *A, int *B, float *X,float *Y)
         res.X = detx/det;
         res.Y = dety/det;
         res._res = 0;
-        return res; /* единственное решение */
+        return res; /*одно решение системы уравнений */
     }
     else
     if ((fabs(detx) <1.0E-14) && (fabs(dety) <1.0E-14)) {
         res._res = 1;
-        return res; /* бесконечное множество решений */
+        return res; /* бесконечное множество решений системы */
     }
     else
     {
         res._res = -1;
-        return res; /* решений нет */
+        return res; /* решений не существует*/
     }
 }
 
