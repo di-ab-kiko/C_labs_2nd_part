@@ -1,74 +1,68 @@
 #include <math.h>
 #include <stdio.h>
-#define IDEAL_INTEGRAL_VALUE
 
-#define RECTANGLE 1
-#define TRAPEZOIDAL 2
-#define SIMPSON 3
 
-#define  MAX_ITER 500
+#define RECTANGLE 1 // метод прямоугольников
+#define TRAPEZOIDAL 2 // метод трапеций
+#define SIMPSON 3 // метод симпсона
+#define  MAX_ITER 200 // максимальное число итераций
 
-double f1(double,double );
-double freq(double);
-double getIntegralValue(int method, double a, double start_x, double stop_x, int n);
-double rectIntegral(double a, double start_x, double stop_x, int N);
-double trapIntegral(double a, double start_x, double stop_x, int N);
+double f(double, double); // исходная функция
+double getIntegralValue(int method, double a, double start_x, double stop_x, int n); // выбор метода интегрирования
+double rectIntegral(double a, double start_x, double stop_x, int N); // метод прямоугольников
+double trapIntegral(double a, double start_x, double stop_x, int N); // метод трапеций
 double simpIntegral(double a, double start_x, double stop_x, int N);
 
-void absDifferenceCompare(int, int, int, double, double );
-
-int main()
-{
-
-    printf("Значение интеграла: 45\n");
-    printf("Интегрирование методом треугольника: %lf\n", getIntegralValue(RECTANGLE, 1, 0, 2 * M_PI, MAX_ITER));
-    printf("Интегрирование методом трапеций: %lf\n", getIntegralValue(TRAPEZOIDAL, 1, 0, 3 * M_PI, MAX_ITER));
-    printf("Интегрирование методом Симпсона: %lf\n", getIntegralValue(SIMPSON, 1, 0, 4 * M_PI, MAX_ITER));
-    printf("Нажмите x чтобы закрыть: ");
-    char *var;
-    scanf("%c", var);
-
-    if (*var = 'x')
-    {
-        return 0;
-    }
+int main(){
+	printf("Рассчитываем значение интеграла для a=1 на отрезке [0;2Pi]\n");
+	printf("Интегрирование методом прямоугольников = %f\n", getIntegralValue(RECTANGLE, 1, 0, 2*M_PI, MAX_ITER));
+	printf("Интегрирование методом трапеций: %f\n", getIntegralValue(TRAPEZOIDAL, 1, 0, 2*M_PI, MAX_ITER));
+	printf("Интегрирование методом Симпсона: %f\n", getIntegralValue(SIMPSON, 1, 0, 2*M_PI, MAX_ITER));
+	return 0;
 }
 
-double function_integral(double a, double x)
-{
-    tan(18 * pow(a, 2) + 29 * a * x + 10 * pow(x, 2));
+double f(double a, double x) { // исходная функция
+	return tan(18 * a * a + 29 * a * x + 10 * x * x);
 }
 
-double getIntegralValue(int method, double a, double start_x, double stop_x, int n)
-{
-    double result = 0.0;
-
-    switch (method) {
-        case RECTANGLE:
-            result = rectIntegral(a, start_x, stop_x, n);
-            break;
-        case TRAPEZOIDAL:
-            result = trapIntegral(a, start_x, stop_x, n);
-            break;
-        case SIMPSON:
-            result = simpIntegral(a, start_x, stop_x, n);
-            break;
-        default:
-            break;
-    }
-
-    return result;
+double getIntegralValue(int method, double a, double start_x, double stop_x, int n){ // выбор метода интегрирования
+	double result = 0.0;
+	switch (method) {
+	case RECTANGLE:
+		result = rectIntegral(a, start_x, stop_x, n);
+		break;
+	case TRAPEZOIDAL:
+		result = trapIntegral(a, start_x, stop_x, n);
+		break;
+	case SIMPSON:
+		result = simpIntegral(a, start_x, stop_x, n);
+		break;
+	default:
+		break;
+	}
+	return result;
 }
 
-double rectIntegral(double a, double start_x, double stop_x, int N)
-{
-    return ((stop_x - start_x) * ((start_x + stop_x)/2));
+double rectIntegral(double a, double start_x, double stop_x, int N){ // метод прямоугольников
+	double h = (stop_x - start_x) / N, I = 0;
+	for (double i = start_x; i < stop_x; i += h)
+		I += f(a,i);
+	return h * I;
+
 }
+
 double trapIntegral(double a, double start_x, double stop_x, int N)
-{
-    return 0.5*(stop_x - start_x)*(start_x + stop_x);
+{ // метод трапеций
+	double h = (stop_x - start_x) / N, I = f(a,start_x) / 2 + f(a,stop_x) / 2;
+	for (double i = start_x + h; i < stop_x; i += h)
+		I += f(a, i);
+	return h * I;
+
 }
-double simpIntegral(double a, double start_x, double stop_x, int N)
-{
-    return (stop_x - start_x) / 6.0 * (start_x + 4.0 * 0.5 * (start_x + stop_x) + stop_x);
+
+double simpIntegral(double a, double start_x, double stop_x, int N){ // метод симпсона
+	double h = (stop_x - start_x) / N, I = f(a, start_x) + f(a, stop_x);
+	for (int j = 1; j < N; j++)
+		j % 2 == 1 ?: I += 4 * f(a, start_x + h * j) ?: I += 2*f(a, start_x + h * j);
+	return (h*I/3);
 }
