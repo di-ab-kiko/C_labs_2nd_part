@@ -63,6 +63,9 @@ double trapIntegral(double a, double start_x, double stop_x, int N)
 double simpIntegral(double a, double start_x, double stop_x, int N){ // метод симпсона
 	double h = (stop_x - start_x) / N, I = f(a, start_x) + f(a, stop_x);
 	for (int j = 1; j < N; j++)
-		j % 2 == 1 ?: I += 4 * f(a, start_x + h * j) ?: I += 2*f(a, start_x + h * j);
+		if (j % 2 == 1)
+		    I += 4 * f(a, start_x + h * j);  
+		else   
+		    I += 2*f(a, start_x + h * j);
 	return (h*I/3);
 }
