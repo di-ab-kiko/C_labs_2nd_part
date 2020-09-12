@@ -5,7 +5,7 @@
 #define RECTANGLE 1 // метод прямоугольников
 #define TRAPEZOIDAL 2 // метод трапеций
 #define SIMPSON 3 // метод симпсона
-#define  MAX_ITER 200 // максимальное число итераций
+#define  MAX_ITER 1000000 // максимальное число итераций
 
 double f(double, double); // исходная функция
 double getIntegralValue(int method, double a, double start_x, double stop_x, int n); // выбор метода интегрирования
@@ -14,10 +14,11 @@ double trapIntegral(double a, double start_x, double stop_x, int N); // мето
 double simpIntegral(double a, double start_x, double stop_x, int N);
 
 int main(){
+    const double Pi = 3.14159;
 	printf("Рассчитываем значение интеграла для a=1 на отрезке [0;2Pi]\n");
-	printf("Интегрирование методом прямоугольников = %f\n", getIntegralValue(RECTANGLE, 1, 0, 2*M_PI, MAX_ITER));
-	printf("Интегрирование методом трапеций: %f\n", getIntegralValue(TRAPEZOIDAL, 1, 0, 2*M_PI, MAX_ITER));
-	printf("Интегрирование методом Симпсона: %f\n", getIntegralValue(SIMPSON, 1, 0, 2*M_PI, MAX_ITER));
+	printf("Интегрирование методом прямоугольников = %f\n", getIntegralValue(RECTANGLE, 1, 0, 2*Pi, MAX_ITER));
+	printf("Интегрирование методом трапеций: %f\n", getIntegralValue(TRAPEZOIDAL, 1, 0, 2*Pi, MAX_ITER));
+	printf("Интегрирование методом Симпсона: %f\n", getIntegralValue(SIMPSON, 1, 0, 2*Pi, MAX_ITER));
 	return 0;
 }
 
@@ -69,3 +70,4 @@ double simpIntegral(double a, double start_x, double stop_x, int N){ // мето
 		    I += 2*f(a, start_x + h * j);
 	return (h*I/3);
 }
+
